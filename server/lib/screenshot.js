@@ -9,32 +9,7 @@ async function takeScreenshot() {
   console.log('Taking screenshot');
   const display = (await getDisplays())[0];
   const wholeScreen = await screenshot({ screen: display.id, format: 'png' });
-  const titleImage = await sharp(wholeScreen)
-    .extract({
-      width: 700,
-      height: 120,
-      left: 0,
-      top: 0,
-    })
-    .toBuffer();
-  const statsImage = await sharp(wholeScreen)
-    .extract({
-      width: 300,
-      height: 115,
-      left: 640,
-      top: 550,
-    })
-    .toBuffer();
-  const baseName = new Date().toISOString().replace(/:/g, '-');
-
-  await fs.writeFile(`./screenshots/${baseName}.png`, wholeScreen);
-  await fs.writeFile(`./screenshots/${baseName}_title.png`, titleImage);
-  await fs.writeFile(`./screenshots/${baseName}_stats.png`, statsImage);
-
-  return {
-    titleImage,
-    statsImage,
-  };
+  return wholeScreen;
 }
 
 async function extractSections(wholeImage) {

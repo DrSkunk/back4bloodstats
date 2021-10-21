@@ -1,8 +1,24 @@
 const Tesseract = require('tesseract.js');
 
+const exceptions = {
+  'p ro b': 'Job 10:22',
+  i: 'The Diner',
+  'y t': 'Pain Train',
+};
+
 async function parseString(image) {
-  const result = await Tesseract.recognize(image);
-  console.log(result.data.text);
+  const worker = Tesseract.createWorker();
+  await worker.load();
+  await worker.loadLanguage('eng');
+  await worker.initialize('eng');
+  await worker.setParameters({
+    tessedit_char_whitelist: "ABCDEFGHIJKLMNOPQRSTUVWXYZ&': 0123456789",
+  });
+  const result = await worker.recognize(image);
+  const cleaned = clean(result.data.text);
+  if (exceptions[cleaned]) {
+    return exceptions[cleaned];
+  }
   return capitalize(clean(result.data.text));
 }
 
@@ -32,7 +48,7 @@ async function parseStats(image) {
 }
 
 function clean(text) {
-  return text.trim().replace('\n', ' - ').replace(/\n/g, '');
+  return text.trim().replace('\n', ' - ').replace(/\n/g, '').toLowerCase();
 }
 
 function capitalize(text) {

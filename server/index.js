@@ -1,12 +1,13 @@
 const path = require('path');
-const { takeScreenshot } = require('./lib/screenshot');
+const { takeScreenshot, extractSections } = require('./lib/screenshot');
 const { GlobalKeyboardListener } = require('node-global-key-listener');
-const { parseTitle, parseStats } = require('./lib/ocr');
+const { parseStats, parseString } = require('./lib/ocr');
 const { startWebServer, showEntry } = require('./lib/webserver');
 const { addEntry } = require('./lib/database');
 const { addOnlineEntry } = require('./lib/api');
 
 const player = require('node-wav-player');
+const { getId } = require('./lib/getId');
 
 startWebServer();
 
@@ -23,22 +24,26 @@ hotkeys.addListener(({ name, state }) => {
   }
 });
 
+const id = getId();
+
 async function addStats() {
   try {
-    const { titleImage, statsImage } = await takeScreenshot();
-    const title = await parseTitle(titleImage);
-    const { riddenKills, mutationKills } = await parseStats(statsImage);
+    const wholeScreen = await takeScreenshot();
+    const sections = await extractSections(wholeScreen);
+    const act = await parseString(sections.act);
+    const chapter = await parseString(sections.chapter);
+    const { riddenKills, mutationKills } = await parseStats(sections.stats);
     console.log('Read the following data:');
-    console.log(`title: ${title}`);
-    console.log(`riddenKills: ${riddenKills}`);
-    console.log(`mutationKills: ${mutationKills}`);
-    const entry = { title, riddenKills, mutationKills };
+    console.log(`Act: ${act}`);
+    console.log(`Chapter: ${chapter}`);
+    console.log(`Ridden Kills: ${riddenKills}`);
+    console.log(`Mutation Kills: ${mutationKills}`);
+    const entry = { act, chapter, riddenKills, mutationKills };
     // addEntry(entry);
     // showEntry(entry);
+    await addOnlineEntry(entry);
   } catch (error) {
     console.error('Failed to parse screenshot');
     console.error(error);
   }
 }
-
-addOnlineEntry({ title: 'test', riddenKills: 1, mutationKills: 2 });

@@ -6,3 +6,4 @@ admin.initializeApp({
 });
 
 export const firestore = admin.firestore();
+export const serverTimestamp = admin.firestore.FieldValue.serverTimestamp;
