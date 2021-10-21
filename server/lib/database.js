@@ -18,7 +18,7 @@ function getEntries() {
   return db.JSON();
 }
 
-module.exports = {
+module.export = {
   addEntry,
   getEntries,
 };

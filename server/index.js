@@ -1,15 +1,25 @@
-const { takeScreenshot } = require('./screenshot');
+const path = require('path');
+const { takeScreenshot } = require('./lib/screenshot');
 const { GlobalKeyboardListener } = require('node-global-key-listener');
-const { parseTitle, parseStats } = require('./ocr');
-const { startWebServer, showEntry } = require('./webserver');
-const { addEntry } = require('./database');
+const { parseTitle, parseStats } = require('./lib/ocr');
+const { startWebServer, showEntry } = require('./lib/webserver');
+const { addEntry } = require('./lib/database');
+const { addOnlineEntry } = require('./lib/api');
+
+const player = require('node-wav-player');
 
 startWebServer();
 
 const hotkeys = new GlobalKeyboardListener();
 hotkeys.addListener(({ name, state }) => {
   if (name === 'F8' && state === 'DOWN') {
+    console.log('F8 pressed');
     addStats();
+    player
+      .play({
+        path: path.resolve('assets/ping.wav'),
+      })
+      .catch(console.error);
   }
 });
 
@@ -23,10 +33,12 @@ async function addStats() {
     console.log(`riddenKills: ${riddenKills}`);
     console.log(`mutationKills: ${mutationKills}`);
     const entry = { title, riddenKills, mutationKills };
-    addEntry(entry);
-    showEntry(entry);
+    // addEntry(entry);
+    // showEntry(entry);
   } catch (error) {
     console.error('Failed to parse screenshot');
     console.error(error);
   }
 }
+
+addOnlineEntry({ title: 'test', riddenKills: 1, mutationKills: 2 });

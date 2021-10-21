@@ -122,3 +122,9 @@ dist
 
 # Database
 database.json
+
+# Firebase
+firebaseConfig.json
+
+# Test screenshots
+screenshots/
