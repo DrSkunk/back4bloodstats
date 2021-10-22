@@ -8,11 +8,25 @@
     "dev": "nodemon index.js",
     "test": "jest",
     "clean": "rimraf build",
-    "build": "pkg index.js -t node14-win-x64 -o build/audition-chapter-tagger_v$(project-version)_win.exe"
+    "build": "pkg ."
   },
   "keywords": [],
   "author": "",
   "license": "ISC",
+  "bin": "index.js",
+  "pkg": {
+    "scripts": [
+      "index.js",
+      "lib/**/*.js"
+    ],
+    "assets": [
+      "node_modules/sharp/build/Release/sharp-win32-x64.node"
+    ],
+    "targets": [
+      "node14-win-x64"
+    ],
+    "outputPath": "build"
+  },
   "dependencies": {
     "axios": "^0.23.0",
     "inquirer": "^8.2.0",
