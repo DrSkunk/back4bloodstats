@@ -1,14 +1,22 @@
-// const { firestore } = require('./firebase');
-// const testRef = firestore.db.collection('cities');
 const axios = require('axios');
-const { getUsername, getUserId } = require('./database');
+const { getConfig } = require('./getConfig');
 
 const baseUrl = 'http://localhost:3000/api/';
 
 async function addOnlineEntry(entry) {
-  const name = getUsername();
-  const userId = getUserId();
-  await axios.post(`${baseUrl}addEntry`, { ...entry, userId, name });
+  const { userId, username, secret } = await getConfig();
+  console.log({
+    ...entry,
+    userId,
+    username,
+    secret,
+  });
+  await axios.post(`${baseUrl}addEntry`, {
+    ...entry,
+    userId,
+    username,
+    secret,
+  });
 }
 
 module.exports = {

@@ -4,15 +4,15 @@ const { GlobalKeyboardListener } = require('node-global-key-listener');
 const { takeScreenshot, extractSections } = require('./lib/screenshot');
 const { parseStats, parseString } = require('./lib/ocr');
 const { addOnlineEntry } = require('./lib/api');
-const { getUser } = require('./lib/getUser');
+const { getConfig } = require('./lib/getConfig');
 // const { startWebServer, showEntry } = require('./lib/webserver');
 
 // startWebServer();
 
 async function init() {
   console.log('Starting Back4Blood stats analyzer');
-  const user = await getUser();
-  console.log(`Using username ${user.userName} and ID ${user.userId}`);
+  const config = await getConfig();
+  console.log(`Using username ${config.userName} and ID ${config.userId}`);
 
   const hotkeys = new GlobalKeyboardListener();
   hotkeys.addListener(({ name, state }) => {

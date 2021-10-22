@@ -125,3 +125,6 @@ database.json
 
 # Firebase
 firebaseConfig.json
+
+# build folder
+build/
