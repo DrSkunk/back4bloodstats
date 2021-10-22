@@ -24,6 +24,7 @@ export default function Home() {
         <table className="table-auto mx-auto">
           <thead>
             <tr>
+              <Table.Header>Date</Table.Header>
               <Table.Header>Name</Table.Header>
               <Table.Header>Act</Table.Header>
               <Table.Header>Chapter</Table.Header>
@@ -33,12 +34,22 @@ export default function Home() {
           </thead>
           <tbody>
             {stats.map(
-              ({ id, userId, act, chapter, riddenKills, mutationKills }) => (
+              ({
+                id,
+                userId,
+                act,
+                chapter,
+                riddenKills,
+                mutationKills,
+                createdAt,
+              }) => (
                 <tr key={id}>
+                  <Table.Cell>{createdAt.toDate().toString()}</Table.Cell>
                   <Table.Cell>{getUsername(userId)}</Table.Cell>
                   <Table.Cell>{act}</Table.Cell>
                   <Table.Cell>{chapter}</Table.Cell>
                   <Table.Cell>{riddenKills}</Table.Cell>
+                  <Table.Cell>{mutationKills}</Table.Cell>
                   <Table.Cell>{mutationKills}</Table.Cell>
                 </tr>
               )
