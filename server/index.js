@@ -1,33 +1,36 @@
 const path = require('path');
-const { takeScreenshot, extractSections } = require('./lib/screenshot');
-const { GlobalKeyboardListener } = require('node-global-key-listener');
-const { parseStats, parseString } = require('./lib/ocr');
-const { startWebServer, showEntry } = require('./lib/webserver');
-const { addEntry } = require('./lib/database');
-const { addOnlineEntry } = require('./lib/api');
-
 const player = require('node-wav-player');
-const { getId } = require('./lib/getId');
+const { GlobalKeyboardListener } = require('node-global-key-listener');
+const { takeScreenshot, extractSections } = require('./lib/screenshot');
+const { parseStats, parseString } = require('./lib/ocr');
+const { addOnlineEntry } = require('./lib/api');
+const { getUser } = require('./lib/getUser');
+// const { startWebServer, showEntry } = require('./lib/webserver');
 
-startWebServer();
+// startWebServer();
 
-const hotkeys = new GlobalKeyboardListener();
-hotkeys.addListener(({ name, state }) => {
-  if (name === 'F8' && state === 'DOWN') {
-    console.log('F8 pressed');
-    addStats();
-    player
-      .play({
-        path: path.resolve('assets/ping.wav'),
-      })
-      .catch(console.error);
-  }
-});
+async function init() {
+  console.log('Starting Back4Blood stats analyzer');
+  const user = await getUser();
+  console.log(`Using username ${user.userName} and ID ${user.userId}`);
 
-const id = getId();
+  const hotkeys = new GlobalKeyboardListener();
+  hotkeys.addListener(({ name, state }) => {
+    if (name === 'F8' && state === 'DOWN') {
+      addStats();
+      player
+        .play({
+          path: path.resolve('assets/ping.wav'),
+        })
+        .catch(console.error);
+    }
+  });
+  console.log('Screenshot hotkey bound to F8');
+}
 
 async function addStats() {
   try {
+    // TODO check for name and ID
     const wholeScreen = await takeScreenshot();
     const sections = await extractSections(wholeScreen);
     const act = await parseString(sections.act);
@@ -47,3 +50,5 @@ async function addStats() {
     console.error(error);
   }
 }
+
+init();

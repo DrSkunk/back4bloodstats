@@ -1,8 +1,8 @@
-const { firestore, serverTimestamp } = require("./firebase");
+import { firestore, serverTimestamp } from "./firebase";
 
 const ref = firestore.collection("stats");
 
-async function addEntry(entry) {
+export async function addEntry(entry) {
   const res = await ref.add({
     createdAt: serverTimestamp(),
     ...entry,
@@ -11,4 +11,7 @@ async function addEntry(entry) {
   console.log(res);
   return res;
 }
-module.exports = { addEntry };
+
+export async function setName(userId, name) {
+  await firestore.collection("names").doc(userId).set({ name });
+}

@@ -125,6 +125,3 @@ database.json
 
 # Firebase
 firebaseConfig.json
-
-# Generated User ID
-.id
