@@ -12,6 +12,7 @@ const config = {
 
 let firebase;
 if (getApps().length === 0) {
+  console.log("Initializing Firebase");
   firebase = initializeApp(config);
 }
 

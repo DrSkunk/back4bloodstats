@@ -1,4 +1,5 @@
 import Head from "next/head";
+import { getUsername } from "../api/client/usernames";
 import { useStats } from "../hooks/useStats";
 
 const limit = 100;
@@ -11,6 +12,9 @@ export default function Home() {
   if (statsError) {
     return <p>Error...</p>;
   }
+
+  const username = getUsername("5deb2c83-248c-44b9-bf68-49f9ffccec34");
+  console.log(username);
   return (
     <>
       <Head>
@@ -20,6 +24,7 @@ export default function Home() {
         <table className="table-auto mx-auto">
           <thead>
             <tr>
+              <Table.Header>Name</Table.Header>
               <Table.Header>Act</Table.Header>
               <Table.Header>Chapter</Table.Header>
               <Table.Header>Ridden</Table.Header>
@@ -27,14 +32,17 @@ export default function Home() {
             </tr>
           </thead>
           <tbody>
-            {stats.map(({ id, act, chapter, riddenKills, mutationKills }) => (
-              <tr key={id}>
-                <Table.Cell>{act}</Table.Cell>
-                <Table.Cell>{chapter}</Table.Cell>
-                <Table.Cell>{riddenKills}</Table.Cell>
-                <Table.Cell>{mutationKills}</Table.Cell>
-              </tr>
-            ))}
+            {stats.map(
+              ({ id, userId, act, chapter, riddenKills, mutationKills }) => (
+                <tr key={id}>
+                  <Table.Cell>{getUsername(userId)}</Table.Cell>
+                  <Table.Cell>{act}</Table.Cell>
+                  <Table.Cell>{chapter}</Table.Cell>
+                  <Table.Cell>{riddenKills}</Table.Cell>
+                  <Table.Cell>{mutationKills}</Table.Cell>
+                </tr>
+              )
+            )}
           </tbody>
         </table>
       </div>

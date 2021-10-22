@@ -1,9 +1,7 @@
-import { useEffect, useState, useRef } from "react";
+// export function useUsername(uid) {
 
-const cache = new Map();
+//     const [usernames, loading, error] = useCollectionData(statsQuery);
+//     console.log([usernames, loading, error]);
 
-export function useUsername(uid) {
-  const [userNames, setUsernames] = useState([]);
-  const [loading, setLoading] = useState(true);
-  const [error, setError] = useState(null);
-}
+//     return [usernames, statsLoading, statsError];
+// }
